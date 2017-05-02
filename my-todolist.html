@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0">
+	<title>Todo List</title>
+	<style type="text/css">
+		.wrap{
+			width: 80%;
+			margin: 0 auto;
+			text-align: center;
+		}
+		.sub{
+			height: 35px;
+			margin-left: 4px;
+			box-sizing: border-box;
+			padding-left: 4px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			outline: 0;
+			box-shadow: 0 0 5px #ccc;
+			background: #fff;
+		}
+		.edit{
+			display: inline-block;
+			width: 65%;
+			height: 35px;
+			line-height: 35px;
+			margin: 30px auto;
+			box-sizing: border-box;
+			padding-left: 4px;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+			outline: 0;
+			box-shadow: 0 0 5px #ccc;
+		}
+		.list{
+			margin: 0 auto;
+			width: 80%;
+		}
+		.unit{
+			position: relative;
+			padding: 10px 0;
+			border-bottom: 1px solid #efefef;
+		}
+		.unit:last-child{
+			border-bottom: 0;
+		}
+		.finish{
+			text-decoration: line-through;
+		    color: #ccc;
+		}
+		.del{
+			background: red;
+			text-decoration: none;
+			position: absolute;
+			right: 0;
+			font-size: 12px;
+			border: 0;
+			outline: 0;
+			padding: 2px 5px;
+			border-radius: 5px;
+			color: #fff;
+		}
+		.empty{
+			font-size: 13px;
+			color: #ccc;
+			text-align: center;
+			padding: 10px 0;
+		}
+	</style>
+	<script src="vue.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div class="wrap">
+			<input
+			 type="text"
+			 v-model="task.content"
+			 placeholder="添加任务"
+			 class="edit"
+			 id="note">
+			 <button @click="addTask()" class="sub">submit</button>
+		</div>
+		 <div class="list">
+			<div class="unit" v-for="(item,index) in list">
+				<input type="checkbox"
+						:checked="item.finished"
+						@click="changeState(index)"
+				>
+				<span :class="{'finish':item.finished}">{{item.content}}</span>
+				<button @click="removeTask(index)" class="del">删除</button>
+			</div>
+		 </div>
+		 <p v-if="list.length===0" class="empty">暂无任务</p>
+	</div>
+
+
+	<script>
+		const app = new Vue({
+			el:"#app",
+			data:{
+				task:{
+					 content:'',//内容为空
+					finished:false,//未完成
+					deleted:false//未删除
+				},
+				list:[]
+			},
+			methods:{
+				addTask:function(){
+					if(document.getElementById('note').value==''){
+							confirm("请填写任务");
+							return false;
+					}else{
+						this.list.push(this.task);
+						this.task={
+							content:'',//内容为空
+							finished:false,//未完成
+							deleted:false//未删除
+						}
+					}
+				},
+				changeState:function(index){
+					let curState=this.list[index].finished;
+					this.list[index].finished=!curState;
+				},
+				removeTask:function(index){
+					this.list.splice(index,1);
+				}
+			}
+		});
+	</script>
+</body>
+</html>
